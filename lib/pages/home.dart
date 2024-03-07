@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter3/apis/apis.dart';
 import 'package:flutter3/apis/helper.dart';
+import 'package:flutter3/models/category.dart';
 import 'package:flutter3/pages/sub-category.dart';
 import 'package:flutter3/shared/shared.dart';
 import 'package:flutter3/widgets/category.dart';
@@ -14,7 +15,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List categories = [];
+  List<Category> categories = [];
   Apis apis = Apis();
 
   @override
@@ -37,9 +38,16 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           apis.getCategories().then((value) {
-            print(value['data']['data'][0]);
+            categories = [];
             setState(() {
-              categories = value['data']['data'];
+              for (var i = 0; i < value['data']['data'].length; i++) {
+                categories.add(Category(
+                    id: value['data']['data'][i]['id'].toString(),
+                    image: value['data']['data'][i]['image'].toString(),
+                    name: value['data']['data'][i]['name'].toString(),
+                    subCategories: value['data']['data'][i]['sub_category']));
+                  
+              }
             });
           });
         },
@@ -48,5 +56,4 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-
 }

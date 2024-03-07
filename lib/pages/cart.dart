@@ -1,45 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter3/apis/apis.dart';
 import 'package:flutter3/models/product.dart';
-import 'package:flutter3/pages/cart.dart';
 import 'package:flutter3/shared/shared.dart';
 
-class ProductsPage extends StatefulWidget {
-  final String categoryId;
-  const ProductsPage({super.key, required this.categoryId});
+class CartPage extends StatefulWidget {
+  const CartPage({super.key});
 
   @override
-  State<ProductsPage> createState() => _ProductsPageState();
+  State<CartPage> createState() => _CartPageState();
 }
 
-class _ProductsPageState extends State<ProductsPage> {
-  String categoryId = "";
+class _CartPageState extends State<CartPage> {
   Apis apis = Apis();
   List<Product> products = [];
+  double total = 0.0;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    setState(() {
-      categoryId = widget.categoryId;
-    });
-    getProducts();
+    getCart();
   }
 
-  getProducts() {
-    apis.getCategoryProducts(categoryId: categoryId).then((value) {
+  void getCart() {
+    apis.getCart().then((value) {
       print(value);
-      setState(() {
-        for (var i = 0; i < value['data']['data'].length; i++) {
+
+      for (var i = 0; i < value['data']['data'].length; i++) {
+        setState(() {
           products.add(Product(
             id: value['data']['data'][i]['id'].toString(),
             image: value['data']['data'][i]['image'],
             name: value['data']['data'][i]['name'],
+            quantity: value['data']['data'][i]['quantity'].toString(),
             price: value['data']['data'][i]['price'] + 0.0,
           ));
-        }
-      });
-      print(products.length);
+        });
+      }
+      calculateCartTotal();
+    });
+  }
+
+  calculateCartTotal() {
+    setState(() {
+      for (var i = 0; i < products.length; i++) {
+        total += double.parse(products[i].quantity) * double.parse(products[i].price.toString());
+      }
     });
   }
 
@@ -47,19 +52,8 @@ class _ProductsPageState extends State<ProductsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Products List"),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.push<void>(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (BuildContext context) => const CartPage(),
-                    ),
-                  );
-                },
-                icon: Icon(Icons.shopping_cart_sharp))
-          ],
+          title: Text("Cart"),
+          actions: [Text(total.toString())],
         ),
         body: ListView.builder(
           itemCount: products.length,
@@ -92,6 +86,4 @@ class _ProductsPageState extends State<ProductsPage> {
           },
         ));
   }
-
-/*   */
 }

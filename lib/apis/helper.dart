@@ -14,6 +14,11 @@ Future apiHelper(
         : await dio.post(
             baseURL + apiPath,
             queryParameters: hasBody ? bodyApi : {},
+            options: Options(
+              headers: {
+                'Accept': 'application/json',
+              },
+            ),
           );
     data = {"data": response.data, 'status': response.statusCode.toString()};
   } catch (e) {
