@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter3/firebase/service.dart';
+import 'package:flutter3/pages/auth/signup.dart';
 import 'package:flutter3/service/service.dart';
+import 'package:flutter3/shared/shared.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 
 class LoginPage extends StatefulWidget {
@@ -118,8 +121,19 @@ class _LoginPageState extends State<LoginPage> {
             ),
             InkWell(
               onTap: () {
-                changeLocale(context, "en");
-
+                loginFirebase(password: password, phone: phone).then((value) {
+                  print(value);
+                  if (value.length == 0) {
+                    showToast('please register');
+                  } else {
+                    userData = value['data'];
+                    userId = value['id'];
+                    print(userData);
+                    print(userId);
+                    setUserId(); 
+                    //{data: {image: assds, password: 1234, phone: 0000000, name: ARAR, id: 1}, id: rXHGjmMqtFeZZIoRugZa}
+                  }
+                });
                 /*   if (_keyPhone.currentState!.validate()) {
                   _keyPhone.currentState!.save();
 
@@ -172,7 +186,14 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push<void>(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) => const SignupPage(),
+                      ),
+                    );
+                  },
                   child: Text(
                     translate("singupFromhere"),
                     style: const TextStyle(

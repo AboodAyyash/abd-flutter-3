@@ -7,8 +7,8 @@ import 'package:flutter3/shared/shared.dart';
 import 'package:flutter3/widgets/category.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+  const MyHomePage({super.key});
+
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -23,7 +23,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+       
       ),
       body: Center(
         child: categories.isNotEmpty
@@ -41,12 +41,15 @@ class _MyHomePageState extends State<MyHomePage> {
             categories = [];
             setState(() {
               for (var i = 0; i < value['data']['data'].length; i++) {
-                categories.add(Category(
+                categories.add(
+                  Category(
                     id: value['data']['data'][i]['id'].toString(),
                     image: value['data']['data'][i]['image'].toString(),
                     name: value['data']['data'][i]['name'].toString(),
-                    subCategories: value['data']['data'][i]['sub_category']));
+                    subCategories: value['data']['data'][i]['sub_category'],
                   
+                  ),
+                );
               }
             });
           });

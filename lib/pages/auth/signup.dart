@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter3/firebase/firebase.dart';
+import 'package:flutter3/firebase/service.dart';
+import 'package:flutter3/pages/auth/login.dart';
 import 'package:flutter3/service/service.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 
@@ -146,16 +148,58 @@ class _SignupPageState extends State<SignupPage> {
             ),
             InkWell(
               onTap: () {
-                setUserData();
-                /* if (_keyPhone.currentState!.validate()) {
+                if (_keyPhone.currentState!.validate()) {
                   _keyPhone.currentState!.save();
 
                   if (phone == '' || password == '' || userName == '') {
-                    // service.showToast(translate("pleaseAddAllData"));
+                    showToast(translate("pleaseAddAllData"));
                   } else {
-                    // loginApi();
+                    searchFirebaseDocument(
+                            collectionName: "users",
+                            query: phone,
+                            where: "phone")
+                        .then((serachVaue) {
+                      print(serachVaue);
+                      if (serachVaue.length == 0) {
+                        //we can register
+                        getFirebaseCollectionCount(collectionName: "users")
+                            .then((count) {
+                          var userData = {
+                            'phone': phone,
+                            'name': userName,
+                            "password": password,
+                            "image": "ssss",
+                            'id': (count + 1).toString()
+                          };
+                          setFirebaseDocumentData(
+                                  collectionName: "users", data: userData)
+                              .then((value) {
+                            Navigator.push<void>(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext context) =>
+                                    const LoginPage(),
+                              ),
+                            );
+                          });
+                        });
+                      } else {
+                        //we can not register
+                        showToast(translate("this phone is already exist"));
+                      }
+                    });
+
+                    // check phone number
+                    // count
+                    // register
+                    // login
+                    /* setUserData(
+                      phone: phone,
+                      password: password,
+                      name: userName,
+                    ); */
                   }
-                } */
+                }
               },
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
@@ -192,7 +236,14 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push<void>(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) => const LoginPage(),
+                      ),
+                    );
+                  },
                   child: Text(
                     translate("loginFromHere"),
                     style: const TextStyle(

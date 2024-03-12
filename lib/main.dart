@@ -1,12 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter3/firebase_options.dart';
 import 'package:flutter3/pages/auth/login.dart';
 import 'package:flutter3/pages/auth/signup.dart';
 import 'package:flutter3/pages/home.dart';
+import 'package:flutter3/pages/splash.dart';
 import 'package:flutter3/shared/shared.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   var delegate = await LocalizationDelegate.create(
       fallbackLocale: 'en', supportedLocales: ['en', 'ar']);
   runApp(LocalizedApp(delegate, MyApp()));
@@ -33,7 +38,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: localizationDelegate.supportedLocales,
       locale: localizationDelegate.currentLocale,
       navigatorKey: navigatorKey,
-      home: const SignupPage(),
+      home: const SplashPage(),
     );
   }
 }
