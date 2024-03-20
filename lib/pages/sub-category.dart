@@ -18,14 +18,17 @@ class _SubCatPageState extends State<SubCatPage> {
   @override
   void initState() {
     // TODO: implement initState
+
     super.initState();
+
     for (var i = 0; i < widget.subCategories.length; i++) {
       categories.add(Category(
-          id: widget.subCategories[i]['id'].toString(),
-          image: widget.subCategories[i]['image'].toString(),
-          name: widget.subCategories[i]['name'].toString(),
+          id: widget.subCategories[i]["data"]['id'].toString(),
+          image: widget.subCategories[i]["data"]['image'].toString(),
+          name: widget.subCategories[i]["data"]['name'].toString(),
           subCategories: []));
     }
+    setState(() {});
   }
 
   @override

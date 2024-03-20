@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter3/apis/apis.dart';
+import 'package:flutter3/firebase/service.dart';
 import 'package:flutter3/models/product.dart';
 import 'package:flutter3/pages/cart.dart';
 import 'package:flutter3/shared/shared.dart';
@@ -27,7 +28,22 @@ class _ProductsPageState extends State<ProductsPage> {
   }
 
   getProducts() {
-    apis.getCategoryProducts(categoryId: categoryId).then((value) {
+    searchFirebaseDocument(
+            collectionName: 'products', query: categoryId, where: "categoryId")
+        .then((value) {
+      print(value);
+      setState(() {
+        for (var i = 0; i < value.length; i++) {
+          products.add(Product(
+            id: value[i]['data']['id'].toString(),
+            image: value[i]['data']['image'],
+            name: value[i]['data']['name'],
+            price: double.parse(value[i]['data']['price']) + 0.0,
+          ));
+        }
+      });
+    });
+    /* apis.getCategoryProducts(categoryId: categoryId).then((value) {
       print(value);
       setState(() {
         for (var i = 0; i < value['data']['data'].length; i++) {
@@ -40,7 +56,7 @@ class _ProductsPageState extends State<ProductsPage> {
         }
       });
       print(products.length);
-    });
+    }); */
   }
 
   @override
@@ -71,17 +87,24 @@ class _ProductsPageState extends State<ProductsPage> {
               child: Card(
                 child: Column(
                   children: [
-                    Image.network(baseURL + products[i].image.toString()),
+                    Image.network(products[i].image.toString()),
                     Text(products[i].name.toString()),
                     Text("${products[i].price} JOD"),
                     MaterialButton(
                       onPressed: () {
-                        apis
+                        Map<String, dynamic> cartData = {
+                          'userId': userData['data']['id'],
+                          'productId': products[i].id,
+                          'qty': '1'
+                        };
+                        setFirebaseDocumentData(
+                            collectionName: 'cart', data: cartData);
+                        /*    apis
                             .postAddToCart(
                                 productId: products[i].id, quantity: '1')
                             .then((value) {
                           print(value);
-                        });
+                        }); */
                       },
                       child: Text("Add To Cart"),
                     )

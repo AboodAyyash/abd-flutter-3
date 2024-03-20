@@ -95,6 +95,18 @@ Future setFirebaseDocumentData({data, collectionName}) async {
   }
 }
 
+Future deleteFirebaseDocumentData({id, collectionName}) async {
+  CollectionReference collection =
+      FirebaseFirestore.instance.collection(collectionName);
+  try {
+    await collection.doc(id).delete();
+    return 'success';
+  } catch (e) {
+    print("a7a Delete");
+    print(e);
+  }
+}
+
 Future updateFirebaseDocumentData({id, data, collectionName}) async {
   CollectionReference collection =
       FirebaseFirestore.instance.collection(collectionName);
@@ -108,7 +120,7 @@ Future updateFirebaseDocumentData({id, data, collectionName}) async {
 }
 
 Future searchFirebaseDocument({collectionName, query, where}) async {
-  print(collectionName);
+  print("collectionName $collectionName");
   print(query);
 
   try {
