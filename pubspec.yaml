@@ -39,6 +39,8 @@ dependencies:
   flutter_translate: ^4.0.4
   shared_preferences: ^2.2.2
   cloud_firestore: ^4.14.0
+  flutter_polyline_points: ^2.0.0
+  google_maps_flutter: ^2.6.0
   flutter_localizations:
     sdk: flutter
   dio: ^5.4.1

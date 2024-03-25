@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter3/firebase/service.dart';
 import 'package:flutter3/pages/auth/login.dart';
 import 'package:flutter3/pages/home.dart';
+import 'package:flutter3/pages/map.dart';
 import 'package:flutter3/service/service.dart';
 import 'package:flutter3/shared/shared.dart';
 
@@ -25,7 +26,13 @@ class _SplashPageState extends State<SplashPage> {
 
   void start() {
     Timer(Duration(seconds: 1), () {
-      getUserId().then((value) {
+      Navigator.push<void>(
+        context,
+        MaterialPageRoute<void>(
+          builder: (BuildContext context) => const MapSample(),
+        ),
+      );
+      /*    getUserId().then((value) {
         print(value);
         if (value == null) {
           Navigator.pushReplacement<void, void>(
@@ -50,6 +57,7 @@ class _SplashPageState extends State<SplashPage> {
           });
         }
       });
+     */
     });
   }
 
